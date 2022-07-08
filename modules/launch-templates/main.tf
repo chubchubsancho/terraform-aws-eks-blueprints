@@ -77,17 +77,14 @@ resource "aws_launch_template" "this" {
     }
   }
 
-  dynamic "metadata_options" {
-    for_each = each.value.enable_metadata_options ? [1] : []
+  metadata_options = each.value.enable_metadata_options ? {
+    http_endpoint               = try(each.value.http_endpoint, "enabled")
+    http_tokens                 = try(each.value.http_tokens, "required")
+    http_put_response_hop_limit = try(each.value.http_put_response_hop_limit, 2)
+    http_protocol_ipv6          = try(each.value.http_protocol_ipv6, null)
+    instance_metadata_tags      = try(each.value.instance_metadata_tags, null)
+  } : {}
 
-    content {
-      http_endpoint               = try(each.value.http_endpoint, "enabled")
-      http_tokens                 = try(each.value.http_tokens, "required")
-      http_put_response_hop_limit = try(each.value.http_put_response_hop_limit, 2)
-      http_protocol_ipv6          = try(each.value.http_protocol_ipv6, null)
-      instance_metadata_tags      = try(each.value.instance_metadata_tags, null)
-    }
-  }
 
   lifecycle {
     create_before_destroy = true
