@@ -35,6 +35,7 @@ variable "launch_template_config" {
     http_endpoint               = optional(string)
     http_tokens                 = optional(string)
     http_put_response_hop_limit = optional(number)
+    instance_metadata_tags      = optional(string)
 
     service_ipv6_cidr = optional(string)
     service_ipv4_cidr = optional(string)
